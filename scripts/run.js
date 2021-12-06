@@ -1,24 +1,25 @@
 const main = async() => {
-    const [owner, randomPerson] = await hre.ethers.getSigners();
     const confessContractFactory = await hre.ethers.getContractFactory('Confess');
     const confessContract = await confessContractFactory.deploy();
     await confessContract.deployed();
 
     console.log("Contract deployed to:", confessContract.address);
-    console.log("Contract deployed to:", confessContract.address);
 
     let confessCount;
     confessCount = await confessContract.getTotalConfessions();
+    console.log(confessCount.toNumber());
 
-    let confessTxn = await confessContract.confess();
+    let confessTxn = await confessContract.confess('A message');
     await confessTxn.wait();
 
-    confessCount = await confessContract.getTotalConfessions();
-
-    confessTxn = await confessContract.connect(randomPerson).confess();
+    const [_, randomPerson] = await hre.ethers.getSigners();
+    confessTxn = await confessContract.connect(randomPerson).confess('Another message!');
     await confessTxn.wait();
 
-    confessCount = await confessContract.getTotalConfessions();
+
+
+    let allConfessions = await confessContract.getAllConfessions();
+    console.log(allConfessions);
 
 };
 
