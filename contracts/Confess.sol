@@ -18,7 +18,7 @@ contract Confess {
     Confession[] confessions;
 
 
-    constructor() {
+    constructor() payable {
         console.log("Say something you've never told anyone and you'll probably die without telling anybody");
     }
 

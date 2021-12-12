@@ -1,26 +1,39 @@
 const main = async() => {
     const confessContractFactory = await hre.ethers.getContractFactory('Confess');
-    const confessContract = await confessContractFactory.deploy();
+    const confessContract = await confessContractFactory.deploy({
+        value: hre.ethers.utils.parseEther('0.1'),
+    });
     await confessContract.deployed();
+    console.log('Contract addy:', confessContract.address);
 
-    console.log("Contract deployed to:", confessContract.address);
+    /*
+     * Get Contract balance
+     */
+    let contractBalance = await hre.ethers.provider.getBalance(
+        confessContract.address
+    );
+    console.log(
+        'Contract balance:',
+        hre.ethers.utils.formatEther(contractBalance)
+    );
 
-    let confessCount;
-    confessCount = await confessContract.getTotalConfessions();
-    console.log(confessCount.toNumber());
-
-    let confessTxn = await confessContract.confess('A message');
+    /*
+     * Send Confession
+     */
+    let confessTxn = await confessContract.confess('A message!');
     await confessTxn.wait();
 
-    const [_, randomPerson] = await hre.ethers.getSigners();
-    confessTxn = await confessContract.connect(randomPerson).confess('Another message!');
-    await confessTxn.wait();
-
-
+    /*
+     * Get Contract balance to see what happened!
+     */
+    contractBalance = await hre.ethers.provider.getBalance(confessContract.address);
+    console.log(
+        'Contract balance:',
+        hre.ethers.utils.formatEther(contractBalance)
+    );
 
     let allConfessions = await confessContract.getAllConfessions();
     console.log(allConfessions);
-
 };
 
 const runMain = async() => {
