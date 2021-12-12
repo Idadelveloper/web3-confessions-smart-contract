@@ -34,10 +34,7 @@ contract Confess {
 
     function confess(string memory _message) public {
 
-        require(
-            lastConfessedAt[msg.sender] + 15 minutes < block.timestamp,
-            "Wait 15m"
-        );
+        require(lastConfessedAt[msg.sender] + 30 seconds < block.timestamp, "Must wait 30 seconds before waving again.");
 
         lastConfessedAt[msg.sender] = block.timestamp;
 
