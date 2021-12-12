@@ -18,12 +18,6 @@ const main = async() => {
     );
 
     /*
-     * Send Confession
-     */
-    let confessTxn = await confessContract.confess('A message!');
-    await confessTxn.wait();
-
-    /*
      * Get Contract balance to see what happened!
      */
     contractBalance = await hre.ethers.provider.getBalance(confessContract.address);
@@ -31,6 +25,19 @@ const main = async() => {
         'Contract balance:',
         hre.ethers.utils.formatEther(contractBalance)
     );
+
+    const confessTxn = await confessContract.confess('This is confession #1');
+    await confessTxn.wait();
+
+    const confessTxn2 = await confessContract.confess('This is confession #2');
+    await confessTxn2.wait();
+
+    contractBalance = await hre.ethers.provider.getBalance(confessContract.address);
+    console.log(
+        'Contract balance:',
+        hre.ethers.utils.formatEther(contractBalance)
+    );
+
 
     let allConfessions = await confessContract.getAllConfessions();
     console.log(allConfessions);
